@@ -9,14 +9,14 @@ class Rover {
   }
 
   moveTo(availableP) {
-    const moveBy = Rover.move[this.heading],
+    const movedSteps = Rover.move[this.heading],
       nextPosition = { x: this.position.x, y: this.position.y };
 
-    nextPosition[moveBy.axis] += moveBy.steps;
+    nextPosition[movedSteps.axis] += movedSteps.steps;
 
-    const isLegal = availableP(nextPosition);
+    const goodPosition = availableP(nextPosition);
 
-    if (isLegal) {
+    if (goodPosition) {
       this.position = nextPosition;
     }
   }
