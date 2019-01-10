@@ -29,6 +29,12 @@ class Rover {
   }
 }
 
+Rover.move = {
+  N: { axis: "y", steps: +1 },
+  S: { axis: "y", steps: -1 },
+  E: { axis: "x", steps: +1 },
+  W: { axis: "x", steps: -1 }
+};
 Rover.turns = {
   N: { L: "W", R: "E" },
   E: { L: "N", R: "S" },
@@ -36,12 +42,6 @@ Rover.turns = {
   W: { L: "S", R: "N" }
 };
 
-Rover.move = {
-  N: { axis: "y", steps: +1 },
-  S: { axis: "y", steps: -1 },
-  E: { axis: "x", steps: +1 },
-  W: { axis: "x", steps: -1 }
-};
 ///////////////////////////////////////////////////////////
 class Plateau {
   constructor(maxX, maxY) {
@@ -54,7 +54,6 @@ class Plateau {
     this.currentRover = null;
 
     this.availableP = this.availableP.bind(this);
-    //this.instructions = this.instructions.bind(this);
   }
 
   availableP(nextPos) {
