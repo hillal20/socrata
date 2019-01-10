@@ -1,6 +1,6 @@
 class Rover {
   constructor(x, y, heading) {
-    this.pos = { x, y };
+    this.position = { x, y };
     this.heading = heading;
   }
 
@@ -8,22 +8,22 @@ class Rover {
     this.heading = Rover.turns[this.heading][to];
   }
 
-  moveTo(predicate) {
+  moveTo(availableP) {
     const moveBy = Rover.move[this.heading],
-      nextPos = { x: this.pos.x, y: this.pos.y };
+      nextPosition = { x: this.position.x, y: this.position.y };
 
-    nextPos[moveBy.axis] += moveBy.steps;
+    nextPosition[moveBy.axis] += moveBy.steps;
 
-    const isLegal = predicate(nextPos);
+    const isLegal = availableP(nextPosition);
 
     if (isLegal) {
-      this.pos = nextPos;
+      this.position = nextPosition;
     }
   }
 
-  getState() {
+  location() {
     return {
-      pos: this.pos,
+      position: this.position,
       heading: this.heading
     };
   }
@@ -54,22 +54,22 @@ class Plateau {
     this.currentRover = null;
 
     this.availableP = this.availableP.bind(this);
-    this.executeCommand = this.executeCommand.bind(this);
+    //this.instructions = this.instructions.bind(this);
   }
 
   availableP(nextPos) {
-    return this.truePosition(nextPos) && !this.getRoverByPosition(nextPos);
+    return this.truePosition(nextPos) && !this.roverPosition(nextPos);
   }
 
   truePosition({ x, y }) {
     return x > -1 && y > -1 && x <= this.size.x && y <= this.size.y;
   }
 
-  getRoverByPosition({ x, y }) {
+  roverPosition({ x, y }) {
     return this.rovers.find(rover => {
-      const state = rover.getState();
+      const location = rover.location();
 
-      return state.pos.x === x && state.pos.y === y;
+      return location.position.x === x && location.position.y === y;
     });
   }
 
@@ -88,43 +88,44 @@ class Plateau {
     return this.rovers.length - 1;
   }
 
-  activateRover(index) {
-    return !!(this.currentRover = this.rovers[index]);
-  }
-
-  executeCommand(command) {
-    if (!this.currentRover) {
+  checkRover(index) {
+    if ((this.currentRover = this.rovers[index])) {
+      return true;
+    } else {
       return false;
     }
-
-    if (command === "M") {
-      return this.currentRover.moveTo(this.availableP);
-    }
-
-    if (command === "L" || command === "R") {
-      return this.currentRover.turnTo(command);
-    }
   }
 
-  sendCommand(commandList) {
-    [...commandList].forEach(this.executeCommand);
+  makeOrder(orders) {
+    [...orders].forEach(order => {
+      if (!this.currentRover) {
+        return false;
+      }
+
+      if (order === "M") {
+        return this.currentRover.moveTo(this.availableP);
+      }
+
+      if (order === "L" || order === "R") {
+        return this.currentRover.turnTo(order);
+      }
+    });
   }
 
-  getFinalPositions() {
+  lastPosition() {
     return this.rovers.map(rover => {
-      const state = rover.getState();
+      const location = rover.location();
 
-      return `${state.pos.x} ${state.pos.y} ${state.heading}`;
+      return `${location.position.x} ${location.position.y} ${
+        location.heading
+      }`;
     });
   }
 }
 
 const newPlateau = new Plateau(5, 5);
-
 newPlateau.addRover(1, 2, "N");
-newPlateau.sendCommand("LMLMLMLMM");
-
+newPlateau.makeOrder("LMLMLMLMM");
 newPlateau.addRover(3, 3, "E");
-newPlateau.sendCommand("MMRMMRMRRM");
-
-console.log(newPlateau.getFinalPositions());
+newPlateau.makeOrder("MMRMMRMRRM");
+console.log(newPlateau.lastPosition());
