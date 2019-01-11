@@ -42,7 +42,6 @@ Rover.turns = {
   W: { L: "S", R: "N" }
 };
 
-///////////////////////////////////////////////////////////
 class Plateau {
   constructor(maxX, maxY) {
     this.size = {
@@ -128,3 +127,5 @@ newPlateau.makeOrder("LMLMLMLMM");
 newPlateau.addRover(3, 3, "E");
 newPlateau.makeOrder("MMRMMRMRRM");
 console.log(newPlateau.lastPosition());
+
+module.export = { Rover, Plateau };

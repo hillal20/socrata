@@ -1,0 +1,23 @@
+{
+  "name": "socrata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "plateau.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hillal20/socrata.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hillal20/socrata/issues"
+  },
+  "homepage": "https://github.com/hillal20/socrata#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^23.6.0"
+  }
+}
